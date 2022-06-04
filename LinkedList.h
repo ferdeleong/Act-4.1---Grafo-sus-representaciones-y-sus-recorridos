@@ -21,6 +21,7 @@
         void addFirst(T value);
         void addLast(T value);
         T getData(int position);
+        LLNode<T>* getHead();
 
   };
 
@@ -109,6 +110,11 @@
       }
       return -1;
     }
+  }
+
+template<class T>
+  LLNode<T>* LinkedList<T>::getHead() {
+    return head;
   }
 
 #endif // _LINKEDLIST_H_

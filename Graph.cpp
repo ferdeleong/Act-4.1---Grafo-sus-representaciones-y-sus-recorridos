@@ -1,6 +1,6 @@
 #include "Graph.h"
 
-
+//Complejidad: O(1) solo se manda a llamar la funcion 
 Graph::Graph(int representa, std::istream& input) {
     if (representa == 1) {
       loadGraphList(input);
@@ -12,6 +12,7 @@ Graph::Graph(int representa, std::istream& input) {
     }
 }
 
+//Complejidad: O(n) porque se destruye cada nodo
 Graph::~Graph() {
   if (representation == 1)
     adjList.clear();
@@ -19,6 +20,7 @@ Graph::~Graph() {
     adjMatrix.clear();
 }
 
+//Complejidad:
 void Graph::loadGraphMatrix(std::istream& input) {
     std::string line;
     int i = 0;
@@ -53,6 +55,7 @@ void Graph::loadGraphMatrix(std::istream& input) {
     }
 }
 
+//Complejidad:
 void Graph::loadGraphList(std::istream& input) {
     std::string line;
     int i = 0;
@@ -87,6 +90,7 @@ void Graph::loadGraphList(std::istream& input) {
     }
   }
 
+//Complejidad:
 void Graph::split(std::string line, std::vector<int> & res) {
     size_t strPos = line.find(" ");
     size_t lastPos = 0;
@@ -98,6 +102,7 @@ void Graph::split(std::string line, std::vector<int> & res) {
     res.push_back(stoi(line.substr(lastPos, line.size() - lastPos)));
 }
 
+//Complejidad: O(n) porque se visitan todos los nodos 
 void Graph::printAdjList(){
 	  std::cout << "Adjacency List" << std::endl;
 		for (int i = 1; i <= numNodes; i++){
@@ -106,6 +111,7 @@ void Graph::printAdjList(){
     }
 }
 
+//Complejidad: O(n) porque se visitan todos los nodos 
 void Graph::printAdjMatrix(){
     std::cout << "Adjacency Matrix" << std::endl;
 		for (int i = 1; i <= numNodes; i++){
@@ -117,6 +123,7 @@ void Graph::printAdjMatrix(){
     }
 }
 
+//Complejidad: O(1) solo se manda a llamar la funcion 
 void Graph::printGraph() {
   if (representation == 1)
     printAdjList();
@@ -124,6 +131,7 @@ void Graph::printGraph() {
     printAdjMatrix();
 }
 
+//Complejidad:  O(V+E) where V is vertices and E is edges
 void Graph::BFS(int v) {
   // Declaramos un set del STL de C++ (elementos unicos y ordenados)
   std::set<int> visited;
@@ -169,3 +177,75 @@ void Graph::BFS(int v) {
   }
   std::cout << std::endl;
 }
+
+//Complejidad: O(V+E) where V is vertices and E is edges
+void Graph::DFS(int v) {
+  // Declaramos un set del STL de C++ (elementos unicos y ordenados)
+  std::set<int> visited;
+  // Creamos una Stack 
+  StackLinkedList<int> stack;
+  // Marcamos el vertice actual v como visitado y entra al queue
+  visited.insert(v);
+  stack.push(v);
+  std::cout << "Recorrido DFS " << std::endl;
+  while(!stack.isEmpty()) {
+    // Extraemos un vertice del queue y lo procesamos (print) 
+    v = stack.getTop();
+    stack.pop();
+    std::cout << v << " ";
+    // Obtenemos los vertices adyacentes del vertice v
+    // Si estos no han sido visitados entonces se marcan como visitados
+    // y los metemos al queue
+    if (representation == 1) { // Lista de adyacencia
+      // Recorrer nodos adyacentes de v
+      for (int j = 0; j < (int)adjList[v].getNumElements(); j ++) {
+        int u = adjList[v].getData(j);
+        // Verifica si u ya fue visitado en tiempo O(log n)
+        bool isInVisited = visited.find(u) != visited.end();
+        if (!isInVisited) {
+          visited.insert(u);
+          stack.push(u);
+        }
+      }
+    }
+    else { // Matriz de adyacencia
+      // Recorrer nodos adyacentes a v
+      for (int u = 1; u <= numNodes; u++) {
+        int c = adjMatrix[v][u];
+        if (c != 0) {
+          // Verifica si u ya fue visitado en tiempo O(log n)
+          bool isInVisited = visited.find(u) != visited.end();
+          if (!isInVisited) {
+            visited.insert(u);
+            stack.push(u);
+          }
+        }
+      }
+    }
+  }
+  std::cout << std::endl;
+  
+}
+
+//Complejidad: O(n) porque se visitan todos los nodos 
+void Graph::copyGraph(int r, Graph &res) {
+  res.numNodes = numNodes;
+  res.numEdges = numEdges;
+  res.representation = r;
+  // copiar de lista a lista
+  if (representation == 1 && r == 1) {
+    res.adjList.resize(numNodes + 1);
+    for (int k = 1; k <= numNodes; k++) {
+      LinkedList<int> newList;
+      res.adjList[k] = newList;
+      LLNode<int> *ptr = adjList[k].getHead();
+      while (ptr != nullptr) {
+        res.adjList[k].addLast(ptr->data);
+        std::cout << ptr->data << " ";
+        ptr = ptr->next;
+      }
+    }
+  }
+}
+
+

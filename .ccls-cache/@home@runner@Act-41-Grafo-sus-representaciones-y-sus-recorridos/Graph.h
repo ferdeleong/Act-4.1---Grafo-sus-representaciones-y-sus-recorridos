@@ -6,6 +6,7 @@
 #include <set>
 #include "LinkedList.h"
 #include "QueueLinkedList.h"
+#include "StackLinkedList.h"
 
 class Graph {
   private:
@@ -29,8 +30,8 @@ class Graph {
     ~Graph();
     void printGraph();
     void BFS(int v);
-
-
+    void DFS(int v);
+    void copyGraph(int r, Graph &res);
 };
 
 

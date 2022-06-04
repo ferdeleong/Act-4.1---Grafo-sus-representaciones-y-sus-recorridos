@@ -7,7 +7,8 @@
       T data; 
       LLNode<T> *next;
       LLNode();
-      LLNode(T val);        
+      LLNode(T val);
+      
   }; 
 
   template<class T>
